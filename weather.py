@@ -2,6 +2,7 @@ import sys
 import os
 from api import fetch_current_weather, fetch_five_day_weather
 from cache import load_cache, get_cached_data, save_cache
+from favorites import add_to_favorites, remove_from_favorites, display_favorites
 
 def display_weather(weather):
     print()
@@ -36,7 +37,10 @@ if api_key is None:
     sys.exit(1)
 
 if len(sys.argv) > 1:
-    city = ' '.join(sys.argv[1::])
+    if ' '.join(sys.argv[1]) == "favorites":
+        is_favorite = True
+    else:
+        city = ' '.join(sys.argv[1::])
 else:
     city = input("Enter a city name please: ").strip()
 
@@ -44,7 +48,23 @@ if not city:
     print("Please provide a city name.")
     sys.exit(1)
 
+if is_favorite:
+    print("What would you like to do?")
+    print("1). Add to favorites")
+    print("2). Remove from favorites")
+    print("3). Display favorites' weather")
+    print("4). Quit.")
+    choice = int(input("Enter your choice: "))
 
+    if choice == 1 or choice == 2 or choice == 3:
+        city = input("Enter a city name: ").strip()
+    else:
+        if choice != 4:
+            print("Not a valid number. ")
+        sys.exit(1)
+    #Work on implementing more with implementation
+    
+        
 
 cache = load_cache()
 

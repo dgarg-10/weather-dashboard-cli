@@ -1,4 +1,6 @@
 import json
+from api import fetch_current_weather
+from weather import display_weather
 
 FAVORITES_FILE = "favorites_list.json"
 
@@ -11,7 +13,7 @@ def load_favorites():
     except json.JSONDecodeError:
         return []
 
-def save_to_favorites(favorites: list, city: str):
+def add_to_favorites(favorites: list, city: str):
     city = city.lower()
 
     if city in favorites:
@@ -31,6 +33,14 @@ def remove_from_favorites(favorites: list, city: str):
         with open(FAVORITES_FILE, "w") as f:
             json.dump(favorites, f)
 
+def display_favorites(favorites: list, api_key):
+    if not favorites:
+        print("No favorites have been saved.")
+    else:
+        for city in favorites:
+            weather = fetch_current_weather(city, api_key)
+            if weather is not None:              
+                display_weather(weather)
 
-#Work on adding a display_favorites method
-#Work on implementing the functionality within weather.py
+
+
