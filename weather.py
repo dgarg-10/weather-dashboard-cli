@@ -29,6 +29,26 @@ def display_forecast(daily_summaries):
         desc = day["description"].title()
         print(f"  {date:<14} {high:<10} {low:<10} {desc}")
 
+def main_finding_weather(city, api_key):
+    cache = load_cache()
+
+    cached_entry = get_cached_data(city, cache)
+
+    if cached_entry is not None:
+        weather = cached_entry["weather"]
+        forecast = cached_entry["forecast"]
+    else:
+        weather = fetch_current_weather(city, api_key)
+        forecast = fetch_five_day_weather(city, api_key)
+        if weather is not None and forecast is not None:
+            save_cache(cache, city, weather, forecast)
+        
+    if weather is not None:
+        display_weather(weather)
+    if forecast is not None:
+        display_forecast(forecast)
+
+
 api_key = os.environ.get("WEATHER_API_KEY")
 
 if api_key is None:
@@ -37,7 +57,7 @@ if api_key is None:
 
 is_favorite = False
 if len(sys.argv) > 1:
-    if ' '.join(sys.argv[1]) == "favorites":
+    if sys.argv[1] == "favorites":
         is_favorite = True
     else:
         city = ' '.join(sys.argv[1::])
@@ -49,8 +69,8 @@ if not is_favorite and not city:
     sys.exit(1)
 
 if is_favorite:
-    from favorites import add_to_favorites, remove_from_favorites, display_favorites, load_favorites
-    favorites = load_favorites
+    from favorites import add_to_favorites, remove_from_favorites, load_favorites
+    favorites = load_favorites()
     print("What would you like to do?")
     print("1). Add to favorites")
     print("2). Remove from favorites")
@@ -58,9 +78,9 @@ if is_favorite:
     print("4). Quit.")
     choice = int(input("Enter your choice: "))
 
-    if choice == 1 or choice == 2 or choice == 3:
+    if choice == 1 or choice == 2:
         city = input("Enter a city name: ").strip()
-    else:
+    elif choice != 3:
         if choice != 4:
             print("Not a valid number. ")
         sys.exit(1)
@@ -69,26 +89,13 @@ if is_favorite:
     elif choice == 2:
         remove_from_favorites(favorites, city)
     else:
-        display_favorites(favorites, api_key)
+        for city in favorites:
+            main_finding_weather(city, api_key)
+    sys.exit(1)
 
-cache = load_cache()
+main_finding_weather(city, api_key)
 
-cached_entry = get_cached_data(city, cache)
 
-if cached_entry is not None:
-    weather = cached_entry["weather"]
-    forecast = cached_entry["forecast"]
-    print("Cached Data")
-else:
-    weather = fetch_current_weather(city, api_key)
-    forecast = fetch_five_day_weather(city, api_key)
-    if weather is not None and forecast is not None:
-        save_cache(cache, city, weather, forecast)
-    
-if weather is not None:
-    display_weather(weather)
-if forecast is not None:
-    display_forecast(forecast)
 
 
 

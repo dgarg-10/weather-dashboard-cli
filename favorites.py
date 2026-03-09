@@ -1,6 +1,5 @@
 import json
 from api import fetch_current_weather
-from weather import display_weather
 
 FAVORITES_FILE = "favorites_list.json"
 
@@ -32,15 +31,6 @@ def remove_from_favorites(favorites: list, city: str):
         favorites.remove(city)
         with open(FAVORITES_FILE, "w") as f:
             json.dump(favorites, f)
-
-def display_favorites(favorites: list, api_key):
-    if not favorites:
-        print("No favorites have been saved.")
-    else:
-        for city in favorites:
-            weather = fetch_current_weather(city, api_key)
-            if weather is not None:              
-                display_weather(weather)
 
 
 
