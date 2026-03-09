@@ -70,28 +70,29 @@ if not is_favorite and not city:
 
 if is_favorite:
     from favorites import add_to_favorites, remove_from_favorites, load_favorites
-    favorites = load_favorites()
-    print("What would you like to do?")
-    print("1). Add to favorites")
-    print("2). Remove from favorites")
-    print("3). Display favorites' weather")
-    print("4). Quit.")
-    choice = int(input("Enter your choice: "))
+    while True:
+        favorites = load_favorites()
+        print("What would you like to do?")
+        print("1). Add to favorites")
+        print("2). Remove from favorites")
+        print("3). Display favorites' weather")
+        print("4). Quit.")
+        choice = int(input("Enter your choice: "))
 
-    if choice == 1 or choice == 2:
-        city = input("Enter a city name: ").strip()
-    elif choice != 3:
-        if choice != 4:
-            print("Not a valid number. ")
-        sys.exit(1)
-    if choice == 1:
-        add_to_favorites(favorites, city)
-    elif choice == 2:
-        remove_from_favorites(favorites, city)
-    else:
-        for city in favorites:
-            main_finding_weather(city, api_key)
-    sys.exit(1)
+        if choice == 1 or choice == 2:
+            city = input("Enter a city name: ").strip()
+        elif choice != 3:
+            if choice != 4:
+                print("Not a valid number. ")
+            sys.exit(1)
+        if choice == 1:
+            add_to_favorites(favorites, city)
+        elif choice == 2:
+            remove_from_favorites(favorites, city)
+        else:
+            for city in favorites:
+                main_finding_weather(city, api_key)
+        
 
 main_finding_weather(city, api_key)
 
