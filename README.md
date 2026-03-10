@@ -1,2 +1,2 @@
 # weather-dashboard-cli
-
+The user is able to access weather using the OpenWeather API. This can be any city that is available within the API. They are also able to store their favorites, with persistence, so that they can look at the weather and forecast for these favorites easily. 
